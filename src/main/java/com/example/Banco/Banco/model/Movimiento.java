@@ -6,20 +6,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @Entity
-@Table(name = "cuentas")
+@Table(name = "movimientos")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cuenta {
+public class Movimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String numeroCuenta;
-    private String tipoCuenta;
-    private Double saldoInicial;
-    private Boolean estado;
+    private String tipoMovimiento;
+    private Double valor;
+    private Double saldo;
+    private Date fecha;
 }
