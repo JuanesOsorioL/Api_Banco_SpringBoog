@@ -10,10 +10,10 @@ import java.util.Date;
 @AllArgsConstructor
 public class MovimientoDTO {
     private Date fecha;
-    private String numeroCuenta; // Asociado a la cuenta
+    private String numeroCuenta;
     private Double valor;
     private Double saldo;
-    private String tipoMovimiento; // "Depósito" o "Retiro"
+    private String tipoMovimiento;
 
     public MovimientoDTO(Movimiento movimiento) {
         this.fecha = movimiento.getFecha();

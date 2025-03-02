@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ApiResponse<T> {
     private Integer status;
-    private String mensaje; // Mensaje de éxito o error
-    private T body; // Cuerpo de la respuesta, puede ser cualquier objeto
+    private String mensaje;
+    private T body;
 }
