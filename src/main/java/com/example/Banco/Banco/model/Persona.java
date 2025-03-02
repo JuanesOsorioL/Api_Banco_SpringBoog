@@ -1,28 +1,24 @@
 package com.example.Banco.Banco.model;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @MappedSuperclass
 public abstract class Persona {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(unique = true, nullable = false)
+    private Long identificacion;
+
     private String nombre;
     private String genero;
     private Integer edad;
-    private String identificacion;
+
     private String direccion;
     private String telefono;
+
 }

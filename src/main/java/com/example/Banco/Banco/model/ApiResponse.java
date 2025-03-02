@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse<T> {
-    private int status;  // Código de estado HTTP o código de respuesta personalizado
+    private Integer status;
     private String mensaje; // Mensaje de éxito o error
     private T body; // Cuerpo de la respuesta, puede ser cualquier objeto
 }

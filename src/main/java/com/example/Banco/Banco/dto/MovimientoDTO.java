@@ -1,14 +1,11 @@
 package com.example.Banco.Banco.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.example.Banco.Banco.model.Movimiento;
+import lombok.*;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MovimientoDTO {
@@ -17,4 +14,11 @@ public class MovimientoDTO {
     private Double valor;
     private Double saldo;
     private String tipoMovimiento; // "Depósito" o "Retiro"
+
+    public MovimientoDTO(Movimiento movimiento) {
+        this.fecha = movimiento.getFecha();
+        this.valor = movimiento.getValor();
+        this.saldo = movimiento.getSaldo();
+        this.tipoMovimiento = movimiento.getTipoMovimiento();
+    }
 }

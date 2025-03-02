@@ -13,6 +13,7 @@ public class FabricaClienteService {
     public Cliente criarCliente(ClienteDTO clienteDTO) {
         Cliente cliente = new Cliente();
         cliente.setClienteId(clienteDTO.getClienteId());
+        cliente.setContrasena(clienteDTO.getContrasena());
         cliente.setNombre(clienteDTO.getNombre());
         cliente.setGenero(clienteDTO.getGenero());
         cliente.setEdad(clienteDTO.getEdad());
@@ -26,6 +27,7 @@ public class FabricaClienteService {
     public ClienteDTO criarClienteDTO(Cliente cliente) {
         ClienteDTO clienteDTO = new ClienteDTO();
         clienteDTO.setClienteId(cliente.getClienteId());
+        clienteDTO.setContrasena(cliente.getContrasena());
         clienteDTO.setNombre(cliente.getNombre());
         clienteDTO.setGenero(cliente.getGenero());
         clienteDTO.setEdad(cliente.getEdad());
@@ -35,7 +37,6 @@ public class FabricaClienteService {
         clienteDTO.setEstado(cliente.getEstado());
         return clienteDTO;
     }
-
 
     public List<ClienteDTO> listarClientes(List<Cliente> ListaClientes) {
         List<ClienteDTO> ListaClienteDTO = new ArrayList<>();

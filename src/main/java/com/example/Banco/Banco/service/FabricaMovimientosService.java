@@ -18,7 +18,7 @@ public class FabricaMovimientosService {
         movimiento.setTipoMovimiento(movimientoDTO.getTipoMovimiento());
         return movimiento;
     }
-    
+
     public MovimientoDTO criarMovimientoDTO(Movimiento movimiento) {
         MovimientoDTO movimientoDTO = new MovimientoDTO();
         movimientoDTO.setFecha(movimiento.getFecha());
