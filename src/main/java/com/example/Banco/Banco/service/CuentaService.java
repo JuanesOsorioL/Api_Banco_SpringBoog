@@ -1,5 +1,8 @@
 package com.example.Banco.Banco.service;
 
+import com.example.Banco.Banco.Component.FabricaClienteComponent;
+import com.example.Banco.Banco.Component.FabricaClienteComponentComun;
+import com.example.Banco.Banco.Component.FabricaCuentaComponent;
 import com.example.Banco.Banco.dto.CuentaDTO;
 import com.example.Banco.Banco.model.Cuenta;
 import com.example.Banco.Banco.repository.CuentaRepository;
@@ -12,15 +15,20 @@ import java.util.Optional;
 public class CuentaService {
 
     private final CuentaRepository cuentaRepository;
-    public final FabricaCuentaService fabricaCuentaService;
+    public final FabricaCuentaComponent fabricaCuentaComponent;
     public final ClienteService clienteService;
-    public final FabricaClienteService fabricaClienteService;
+    public final FabricaClienteComponent fabricaClienteComponent;
 
-    public CuentaService(CuentaRepository cuentaRepository, FabricaCuentaService fabricaCuentaService, ClienteService clienteService, FabricaClienteService fabricaClienteService) {
+    public final FabricaClienteComponentComun fabricaClienteComponentComun;
+
+    public CuentaService(CuentaRepository cuentaRepository, FabricaCuentaComponent fabricaCuentaComponent, ClienteService clienteService, FabricaClienteComponent fabricaClienteComponent, FabricaClienteComponentComun fabricaClienteComponentComun) {
         this.cuentaRepository = cuentaRepository;
-        this.fabricaCuentaService = fabricaCuentaService;
+        this.fabricaCuentaComponent = fabricaCuentaComponent;
         this.clienteService = clienteService;
-        this.fabricaClienteService = fabricaClienteService;
+        this.fabricaClienteComponent = fabricaClienteComponent;
+
+
+        this.fabricaClienteComponentComun = fabricaClienteComponentComun;
     }
 
     public Optional<CuentaDTO> save(CuentaDTO cuentaDTO) {
@@ -30,18 +38,18 @@ public class CuentaService {
         }
 
         return clienteService.findByIdentificacion(cuentaDTO.getClienteId())
-                .map(clienteDTO -> fabricaCuentaService.criarCuentaDTO(
-                        cuentaRepository.save(fabricaCuentaService.criarCuenta(
+                .map(clienteDTO -> fabricaClienteComponentComun.criarCuentaDTO(
+                        cuentaRepository.save(fabricaCuentaComponent.criarCuenta(
                                 cuentaDTO, clienteDTO))));
     }
 
     public Optional<CuentaDTO> findByNumeroCuenta(Long account) {
         return cuentaRepository.findByNumeroCuenta(account)
-                .map(fabricaCuentaService::criarCuentaDTO);
+                .map(fabricaClienteComponentComun::criarCuentaDTO);
     }
 
     public List<CuentaDTO> findAll() {
-        return fabricaCuentaService.listaCuentas(cuentaRepository.findAll());
+        return fabricaCuentaComponent.listaCuentas(cuentaRepository.findAll());
     }
 
     public Optional<CuentaDTO> delete(Long account) {
@@ -62,8 +70,8 @@ public class CuentaService {
 
         return clienteService.findByIdentificacion(cuentaDTO.getClienteId())
                 .map(clienteDTO -> {
-                    Cuenta cuentaActualizada = cuentaRepository.save(fabricaCuentaService.criarCuenta(newCuentaDTO.get(), clienteDTO));
-                    return fabricaCuentaService.criarCuentaDTO(cuentaActualizada);
+                    Cuenta cuentaActualizada = cuentaRepository.save(fabricaCuentaComponent.criarCuenta(newCuentaDTO.get(), clienteDTO));
+                    return fabricaClienteComponentComun.criarCuentaDTO(cuentaActualizada);
                 });
     }
 }

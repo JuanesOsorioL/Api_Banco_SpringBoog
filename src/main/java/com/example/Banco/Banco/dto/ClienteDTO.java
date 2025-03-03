@@ -4,7 +4,6 @@ import com.example.Banco.Banco.model.Cliente;
 import lombok.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Getter
@@ -16,7 +15,7 @@ public class ClienteDTO extends PersonaDTO {
     private Long clienteId;
     private String contrasena;
     private Boolean estado;
-    private List<CuentaDTO> cuentasDTO;
+    private List<CuentaDTO> cuentas;
 
     public ClienteDTO(Cliente cliente) {
         super(cliente);
@@ -24,10 +23,10 @@ public class ClienteDTO extends PersonaDTO {
         this.contrasena = cliente.getContrasena();
         this.estado = cliente.getEstado();
 
-       // this.cuentasDTO =cliente.
+       // this.cuentas =cliente.getCuentas();
 
-        this.cuentasDTO = cliente.getCuentas().stream()
+       /* this.cuentas = cliente.getCuentas().stream()
                 .map(CuentaDTO::new)
-                .collect(Collectors.toList());
+                .collect(Collectors.toList());*/
     }
 }
