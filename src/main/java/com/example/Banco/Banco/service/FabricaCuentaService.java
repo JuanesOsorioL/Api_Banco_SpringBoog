@@ -1,7 +1,9 @@
 package com.example.Banco.Banco.service;
 
 
+import com.example.Banco.Banco.dto.ClienteDTO;
 import com.example.Banco.Banco.dto.CuentaDTO;
+import com.example.Banco.Banco.model.Cliente;
 import com.example.Banco.Banco.model.Cuenta;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +13,17 @@ import java.util.List;
 @Service
 public class FabricaCuentaService {
 
-    public Cuenta criarCuenta(CuentaDTO cuentaDTO) {
-        Cuenta cuenta = new Cuenta();
-        cuenta.setNumeroCuenta(cuentaDTO.getNumeroCuenta());
-        cuenta.setTipoCuenta(cuentaDTO.getTipoCuenta());
-        cuenta.setSaldoInicial(cuentaDTO.getSaldoInicial());
-        cuenta.setEstado(cuentaDTO.getEstado());
-        return cuenta;
+    public final FabricaClienteService fabricaClienteService;
+
+    public FabricaCuentaService(FabricaClienteService fabricaClienteService) {
+        this.fabricaClienteService = fabricaClienteService;
+    }
+
+
+
+    public Cuenta criarCuenta(CuentaDTO cuentaDTO, ClienteDTO clienteDTO) {
+      //  System.out.println("cuentaDTO = " + cuentaDTO + ", clienteDTO = " + clienteDTO);
+       return new Cuenta(cuentaDTO,fabricaClienteService.criarCliente(clienteDTO));
     }
 
     public CuentaDTO criarCuentaDTO(Cuenta cuenta) {
@@ -34,4 +40,6 @@ public class FabricaCuentaService {
         listaCuentas.forEach(cuenta -> listaCuentasDTO.add(criarCuentaDTO(cuenta)));
         return listaCuentasDTO;
     }
+
+
 }

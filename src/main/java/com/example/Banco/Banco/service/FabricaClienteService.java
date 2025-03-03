@@ -11,31 +11,11 @@ import java.util.List;
 public class FabricaClienteService {
 
     public Cliente criarCliente(ClienteDTO clienteDTO) {
-        Cliente cliente = new Cliente();
-        cliente.setClienteId(clienteDTO.getClienteId());
-        cliente.setContrasena(clienteDTO.getContrasena());
-        cliente.setNombre(clienteDTO.getNombre());
-        cliente.setGenero(clienteDTO.getGenero());
-        cliente.setEdad(clienteDTO.getEdad());
-        cliente.setIdentificacion(clienteDTO.getIdentificacion());
-        cliente.setDireccion(clienteDTO.getDireccion());
-        cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setEstado(clienteDTO.getEstado());
-        return cliente;
+        return new Cliente(clienteDTO);
     }
 
     public ClienteDTO criarClienteDTO(Cliente cliente) {
-        ClienteDTO clienteDTO = new ClienteDTO();
-        clienteDTO.setClienteId(cliente.getClienteId());
-        clienteDTO.setContrasena(cliente.getContrasena());
-        clienteDTO.setNombre(cliente.getNombre());
-        clienteDTO.setGenero(cliente.getGenero());
-        clienteDTO.setEdad(cliente.getEdad());
-        clienteDTO.setIdentificacion(cliente.getIdentificacion());
-        clienteDTO.setDireccion(cliente.getDireccion());
-        clienteDTO.setTelefono(cliente.getTelefono());
-        clienteDTO.setEstado(cliente.getEstado());
-        return clienteDTO;
+        return new ClienteDTO(cliente);
     }
 
     public List<ClienteDTO> listarClientes(List<Cliente> ListaClientes) {

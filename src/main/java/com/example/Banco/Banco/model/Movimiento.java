@@ -21,7 +21,11 @@ public class Movimiento {
     private Double valor;
     private Double saldo;
     private Date fecha;
-
+/*
+    @ManyToOne
+    @JoinColumn(name = "numero_cuenta")
+    private Cuenta cuenta;
+*/
     public Movimiento(MovimientoDTO movimientoDTO) {
         this.tipoMovimiento = movimientoDTO.getTipoMovimiento();
         this.valor = movimientoDTO.getValor();

@@ -26,6 +26,7 @@ public class ClienteController {
                         .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Cliente creado exitosamente", clientSaved)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.CONFLICT)
                         .body(new ApiResponse<>(HttpStatus.CONFLICT.value(), "Cliente Ya Existe", null)));
+
     }
 
     @GetMapping
@@ -55,6 +56,7 @@ public class ClienteController {
 
     @PutMapping
     public ResponseEntity<ApiResponse<ClienteDTO>> updateCliente(@RequestBody ClienteDTO clienteDTO) {
+        System.out.println("clienteDTO = " + clienteDTO);
         return clienteService.update(clienteDTO)
                 .map(existClientDTO -> ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Cliente Actualizado", existClientDTO)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
