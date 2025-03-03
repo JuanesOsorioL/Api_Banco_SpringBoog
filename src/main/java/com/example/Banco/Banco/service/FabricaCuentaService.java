@@ -22,7 +22,6 @@ public class FabricaCuentaService {
 
 
     public Cuenta criarCuenta(CuentaDTO cuentaDTO, ClienteDTO clienteDTO) {
-      //  System.out.println("cuentaDTO = " + cuentaDTO + ", clienteDTO = " + clienteDTO);
        return new Cuenta(cuentaDTO,fabricaClienteService.criarCliente(clienteDTO));
     }
 

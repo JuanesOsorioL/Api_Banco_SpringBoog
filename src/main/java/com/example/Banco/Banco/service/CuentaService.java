@@ -1,8 +1,6 @@
 package com.example.Banco.Banco.service;
 
-import com.example.Banco.Banco.dto.ClienteDTO;
 import com.example.Banco.Banco.dto.CuentaDTO;
-import com.example.Banco.Banco.model.Cliente;
 import com.example.Banco.Banco.model.Cuenta;
 import com.example.Banco.Banco.repository.CuentaRepository;
 import org.springframework.stereotype.Service;
@@ -34,7 +32,7 @@ public class CuentaService {
         return clienteService.findByIdentificacion(cuentaDTO.getClienteId())
                 .map(clienteDTO -> fabricaCuentaService.criarCuentaDTO(
                         cuentaRepository.save(fabricaCuentaService.criarCuenta(
-                                cuentaDTO,clienteDTO))));
+                                cuentaDTO, clienteDTO))));
     }
 
     public Optional<CuentaDTO> findByNumeroCuenta(Long account) {
@@ -46,36 +44,32 @@ public class CuentaService {
         return fabricaCuentaService.listaCuentas(cuentaRepository.findAll());
     }
 
-
-/*
-    public Optional<CuentaDTO> save(CuentaDTO cuentaDTO) {
-        //Cliente cliente = cuentaDTO();
-
-
-
-        if (findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
-                .isPresent()) {
-            return Optional.empty();
-        }
-        Cuenta newAccount = fabricaCuentaService.criarCuenta(cuentaDTO);
-        Cuenta accountSaved = cuentaRepository.save(newAccount);
-        return Optional.of(fabricaCuentaService.criarCuentaDTO(accountSaved));
-    }
-
-
-
-
-
     public Optional<CuentaDTO> delete(Long account) {
-        return findByNumeroCuenta(account)
-                .map(cuentaDTO -> {
-                    cuentaRepository.deleteById(cuentaDTO.getNumeroCuenta());
-                    return cuentaDTO;
-                });
+        return findByNumeroCuenta(account).map(cuentaDTO -> {
+            cuentaRepository.deleteById(cuentaDTO.getNumeroCuenta());
+            return cuentaDTO;
+        });
     }
 
     public Optional<CuentaDTO> update(CuentaDTO cuentaDTO) {
-        return findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
-                .map(accountExist -> fabricaCuentaService.criarCuentaDTO(cuentaRepository.save(fabricaCuentaService.criarCuenta(cuentaDTO))));
-    }*/
+        Optional<CuentaDTO> newCuentaDTO= findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
+                .map(existingAccount -> {
+                    // Actualizar los campos de la cuenta existente
+                    existingAccount.setSaldoInicial(cuentaDTO.getSaldoInicial());
+                    existingAccount.setEstado(cuentaDTO.getEstado());
+                    existingAccount.setTipoCuenta(cuentaDTO.getTipoCuenta());
+
+                    return existingAccount;
+                });
+
+        return clienteService.findByIdentificacion(cuentaDTO.getClienteId())
+                .map(clienteDTO ->{
+                    // Guardar la cuenta actualizada
+                    Cuenta cuentaActualizada = cuentaRepository.save(fabricaCuentaService.criarCuenta(newCuentaDTO.get(),clienteDTO));
+                    return fabricaCuentaService.criarCuentaDTO(cuentaActualizada);
+                });
+
+
+    }
 }
+//  fabricaCuentaService.criarCuentaDTO(cuentaRepository.save(fabricaCuentaService.criarCuenta(cuentaDTO,accountExist.getClienteDTO())))

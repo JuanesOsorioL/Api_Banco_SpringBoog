@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/banco/cuenta")
@@ -21,7 +22,7 @@ public class CuentaController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CuentaDTO>> saveCliente(@RequestBody CuentaDTO cuentaDTO) {
+    public ResponseEntity<ApiResponse<CuentaDTO>> saveAccount(@RequestBody CuentaDTO cuentaDTO) {
         return cuentaService.save(cuentaDTO)
                 .map(accountSaved -> ResponseEntity.status(HttpStatus.CREATED)
                         .body(new ApiResponse<>(HttpStatus.CREATED.value(), "Cuenta creada exitosamente", accountSaved)))
@@ -31,7 +32,7 @@ public class CuentaController {
 
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<CuentaDTO>>> getAllClientes() {
+    public ResponseEntity<ApiResponse<List<CuentaDTO>>> getAllAccounts() {
         List<CuentaDTO> listCuentaDTO = cuentaService.findAll();
         return listCuentaDTO.isEmpty()
                 ? ResponseEntity.status(HttpStatus.OK)
@@ -47,4 +48,21 @@ public class CuentaController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Cuenta No Existe", null)));
     }
+
+    @DeleteMapping("/{account}")
+    public ResponseEntity<ApiResponse<CuentaDTO>> deleteAccountById(@PathVariable Long account) {
+        return cuentaService.delete(account)
+                .map(cuentaDTO -> ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Cuenta Eliminado", cuentaDTO)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Cuenta No Existe", null)));
+    }
+
+    @PutMapping
+    public ResponseEntity<ApiResponse<CuentaDTO>> updateAccount(@RequestBody CuentaDTO cuentaDTO) {
+        return cuentaService.update(cuentaDTO)
+                .map(existAccountDTO -> ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Cuenta Actualizado", existAccountDTO)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Cuenta No Existe", null)));
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.Banco.Banco.dto;
 
+import com.example.Banco.Banco.model.Cuenta;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,24 +17,13 @@ public class CuentaDTO {
     private ClienteDTO clienteDTO;
     private Long clienteId;
 
-    public CuentaDTO(CuentaDTO cuentaDTO) {
-        this.numeroCuenta = cuentaDTO.getNumeroCuenta();
-        this.tipoCuenta = cuentaDTO.getTipoCuenta();
-        this.saldoInicial = cuentaDTO.getSaldoInicial();
-        this.estado = cuentaDTO.getEstado();
-        this.clienteDTO = cuentaDTO.getClienteDTO();
-        this.clienteId = cuentaDTO.getClienteId();
+
+    public CuentaDTO(Cuenta cuenta) {
+        this.numeroCuenta = cuenta.getNumeroCuenta();
+        this.tipoCuenta = cuenta.getTipoCuenta();
+        this.saldoInicial = cuenta.getSaldoInicial();
+        this.estado = cuenta.getEstado();
+        this.clienteId = cuenta.getCliente().getClienteId();
     }
 
-    @Override
-    public String toString() {
-        return "CuentaDTO{" +
-                "numeroCuenta=" + numeroCuenta +
-                ", tipoCuenta='" + tipoCuenta + '\'' +
-                ", saldoInicial=" + saldoInicial +
-                ", estado=" + estado +
-               ", clienteDTO=" + clienteDTO +
-                ", clienteId=" + clienteId +
-                '}';
-    }
 }

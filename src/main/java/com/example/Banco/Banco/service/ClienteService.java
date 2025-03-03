@@ -31,7 +31,7 @@ public class ClienteService {
     }
 
     public List<ClienteDTO> findAll() {
-        System.out.println("Lista de clientes"+clienteRepository.findAll());
+
         return fabricaClienteService.listarClientes(clienteRepository.findAll());
     }
 
@@ -52,8 +52,5 @@ public class ClienteService {
         return findByIdentificacion(clienteDTO.getIdentificacion())
                 .map((clientExist) -> fabricaClienteService.criarClienteDTO(clienteRepository.save(fabricaClienteService.criarCliente(clienteDTO))));
     }
-    /*
-    public Boolean existsClienteByIdentificacion(Long identificacion) {
-        return clienteRepository.existsClienteByIdentificacion(identificacion);
-    }*/
+
 }

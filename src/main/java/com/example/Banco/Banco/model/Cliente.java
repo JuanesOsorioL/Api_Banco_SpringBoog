@@ -32,6 +32,4 @@ public class Cliente extends Persona {
         this.estado = clienteDTO.getEstado();
        // this.cuentas = clienteDTO.getCuentas();
     }
-
-
 }

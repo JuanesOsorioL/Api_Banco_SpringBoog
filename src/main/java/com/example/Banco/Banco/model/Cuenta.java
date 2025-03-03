@@ -23,7 +23,7 @@ public class Cuenta {
     private Boolean estado;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id")
+    @JoinColumn(name = "cliente_id", nullable = false)//
     private Cliente cliente;
 
     public Cuenta(CuentaDTO cuentaDTO, Cliente cliente) {
