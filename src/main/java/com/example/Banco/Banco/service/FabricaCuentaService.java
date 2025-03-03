@@ -5,6 +5,9 @@ import com.example.Banco.Banco.dto.ClienteDTO;
 import com.example.Banco.Banco.dto.CuentaDTO;
 import com.example.Banco.Banco.model.Cliente;
 import com.example.Banco.Banco.model.Cuenta;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,11 +18,10 @@ public class FabricaCuentaService {
 
     public final FabricaClienteService fabricaClienteService;
 
-    public FabricaCuentaService(FabricaClienteService fabricaClienteService) {
+
+    public FabricaCuentaService( FabricaClienteService fabricaClienteService) {
         this.fabricaClienteService = fabricaClienteService;
     }
-
-
 
     public Cuenta criarCuenta(CuentaDTO cuentaDTO, ClienteDTO clienteDTO) {
        return new Cuenta(cuentaDTO,fabricaClienteService.criarCliente(clienteDTO));
@@ -31,6 +33,7 @@ public class FabricaCuentaService {
         cuentaDTO.setTipoCuenta(cuenta.getTipoCuenta());
         cuentaDTO.setSaldoInicial(cuenta.getSaldoInicial());
         cuentaDTO.setEstado(cuenta.getEstado());
+        cuentaDTO.setClienteId(cuenta.getCliente().getClienteId());
         return cuentaDTO;
     }
 
@@ -39,6 +42,5 @@ public class FabricaCuentaService {
         listaCuentas.forEach(cuenta -> listaCuentasDTO.add(criarCuentaDTO(cuenta)));
         return listaCuentasDTO;
     }
-
 
 }

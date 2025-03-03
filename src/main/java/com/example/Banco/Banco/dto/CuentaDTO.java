@@ -14,9 +14,8 @@ public class CuentaDTO {
     private String tipoCuenta;
     private Double saldoInicial;
     private Boolean estado;
-    private ClienteDTO clienteDTO;
+    //private ClienteDTO clienteDTO;
     private Long clienteId;
-
 
     public CuentaDTO(Cuenta cuenta) {
         this.numeroCuenta = cuenta.getNumeroCuenta();
@@ -25,5 +24,4 @@ public class CuentaDTO {
         this.estado = cuenta.getEstado();
         this.clienteId = cuenta.getCliente().getClienteId();
     }
-
 }

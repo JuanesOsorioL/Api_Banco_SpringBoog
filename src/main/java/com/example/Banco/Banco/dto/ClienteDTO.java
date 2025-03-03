@@ -16,14 +16,17 @@ public class ClienteDTO extends PersonaDTO {
     private Long clienteId;
     private String contrasena;
     private Boolean estado;
-    private List<CuentaDTO> cuentas;
+    private List<CuentaDTO> cuentasDTO;
 
     public ClienteDTO(Cliente cliente) {
         super(cliente);
         this.clienteId = cliente.getIdentificacion();
         this.contrasena = cliente.getContrasena();
         this.estado = cliente.getEstado();
-        this.cuentas = cliente.getCuentas().stream()
+
+       // this.cuentasDTO =cliente.
+
+        this.cuentasDTO = cliente.getCuentas().stream()
                 .map(CuentaDTO::new)
                 .collect(Collectors.toList());
     }

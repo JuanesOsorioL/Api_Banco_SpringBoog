@@ -52,24 +52,18 @@ public class CuentaService {
     }
 
     public Optional<CuentaDTO> update(CuentaDTO cuentaDTO) {
-        Optional<CuentaDTO> newCuentaDTO= findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
+        Optional<CuentaDTO> newCuentaDTO = findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
                 .map(existingAccount -> {
-                    // Actualizar los campos de la cuenta existente
                     existingAccount.setSaldoInicial(cuentaDTO.getSaldoInicial());
                     existingAccount.setEstado(cuentaDTO.getEstado());
                     existingAccount.setTipoCuenta(cuentaDTO.getTipoCuenta());
-
                     return existingAccount;
                 });
 
         return clienteService.findByIdentificacion(cuentaDTO.getClienteId())
-                .map(clienteDTO ->{
-                    // Guardar la cuenta actualizada
-                    Cuenta cuentaActualizada = cuentaRepository.save(fabricaCuentaService.criarCuenta(newCuentaDTO.get(),clienteDTO));
+                .map(clienteDTO -> {
+                    Cuenta cuentaActualizada = cuentaRepository.save(fabricaCuentaService.criarCuenta(newCuentaDTO.get(), clienteDTO));
                     return fabricaCuentaService.criarCuentaDTO(cuentaActualizada);
                 });
-
-
     }
 }
-//  fabricaCuentaService.criarCuentaDTO(cuentaRepository.save(fabricaCuentaService.criarCuenta(cuentaDTO,accountExist.getClienteDTO())))

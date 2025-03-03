@@ -27,7 +27,7 @@ public class Cliente extends Persona {
 
     public Cliente(ClienteDTO clienteDTO) {
         super(clienteDTO);
-        this.clienteId = clienteDTO.getIdentificacion();//asigne el mismo identificador
+        this.clienteId = clienteDTO.getIdentificacion();
         this.contrasena = clienteDTO.getContrasena();
         this.estado = clienteDTO.getEstado();
        // this.cuentas = clienteDTO.getCuentas();

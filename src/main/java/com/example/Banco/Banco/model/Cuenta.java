@@ -23,7 +23,7 @@ public class Cuenta {
     private Boolean estado;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)//
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
     public Cuenta(CuentaDTO cuentaDTO, Cliente cliente) {
@@ -33,8 +33,6 @@ public class Cuenta {
         this.estado = cuentaDTO.getEstado();
         this.cliente = cliente;
     }
-
-
 
     @Override
     public String toString() {
