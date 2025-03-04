@@ -1,8 +1,7 @@
 package com.example.Banco.Banco.service;
 
-import com.example.Banco.Banco.Component.FabricaClienteComponent;
-import com.example.Banco.Banco.Component.FabricaClienteComponentComun;
-import com.example.Banco.Banco.Component.FabricaCuentaComponent;
+import com.example.Banco.Banco.Component.ClienteMapper;
+import com.example.Banco.Banco.Component.CuentaMapper;
 import com.example.Banco.Banco.dto.CuentaDTO;
 import com.example.Banco.Banco.model.Cuenta;
 import com.example.Banco.Banco.repository.CuentaRepository;
@@ -14,64 +13,62 @@ import java.util.Optional;
 @Service
 public class CuentaService {
 
+    private final ClienteMapper clienteMapper;
+    private final CuentaMapper cuentaMapper;
     private final CuentaRepository cuentaRepository;
-    public final FabricaCuentaComponent fabricaCuentaComponent;
     public final ClienteService clienteService;
-    public final FabricaClienteComponent fabricaClienteComponent;
 
-    public final FabricaClienteComponentComun fabricaClienteComponentComun;
-
-    public CuentaService(CuentaRepository cuentaRepository, FabricaCuentaComponent fabricaCuentaComponent, ClienteService clienteService, FabricaClienteComponent fabricaClienteComponent, FabricaClienteComponentComun fabricaClienteComponentComun) {
+    public CuentaService(ClienteMapper clienteMapper, CuentaMapper cuentaMapper, CuentaRepository cuentaRepository, ClienteService clienteService) {
+        this.clienteMapper = clienteMapper;
+        this.cuentaMapper = cuentaMapper;
         this.cuentaRepository = cuentaRepository;
-        this.fabricaCuentaComponent = fabricaCuentaComponent;
         this.clienteService = clienteService;
-        this.fabricaClienteComponent = fabricaClienteComponent;
-
-
-        this.fabricaClienteComponentComun = fabricaClienteComponentComun;
     }
 
     public Optional<CuentaDTO> save(CuentaDTO cuentaDTO) {
-        if (findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
-                .isPresent()) {
+        if (cuentaRepository.existsByNumeroCuenta(cuentaDTO.getNumeroCuenta())) {
             return Optional.empty();
         }
 
         return clienteService.findByIdentificacion(cuentaDTO.getClienteId())
-                .map(clienteDTO -> fabricaClienteComponentComun.criarCuentaDTO(
-                        cuentaRepository.save(fabricaCuentaComponent.criarCuenta(
-                                cuentaDTO, clienteDTO))));
+                .map(clienteDTO -> {
+                    Cuenta cuenta = cuentaMapper.toEntity(cuentaDTO);
+                    cuenta.setCliente(clienteMapper.toEntity(clienteDTO));
+                    Cuenta cuentaGuardada = cuentaRepository.save(cuenta);
+                    return cuentaMapper.toDTO(cuentaGuardada);
+                });
     }
 
     public Optional<CuentaDTO> findByNumeroCuenta(Long account) {
         return cuentaRepository.findByNumeroCuenta(account)
-                .map(fabricaClienteComponentComun::criarCuentaDTO);
+                .map(cuentaMapper::toDTO);
     }
 
     public List<CuentaDTO> findAll() {
-        return fabricaCuentaComponent.listaCuentas(cuentaRepository.findAll());
+        return cuentaMapper.toDTOList(cuentaRepository.findAll());
     }
 
     public Optional<CuentaDTO> delete(Long account) {
-        return findByNumeroCuenta(account).map(cuentaDTO -> {
-            cuentaRepository.deleteById(cuentaDTO.getNumeroCuenta());
-            return cuentaDTO;
-        });
+        return cuentaRepository.findByNumeroCuenta(account)
+                .map(cuenta -> {
+                            cuentaRepository.delete(cuenta);
+                            return cuentaMapper.toDTO(cuenta);
+                        }
+                );
     }
 
     public Optional<CuentaDTO> update(CuentaDTO cuentaDTO) {
-        Optional<CuentaDTO> newCuentaDTO = findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
-                .map(existingAccount -> {
-                    existingAccount.setSaldoInicial(cuentaDTO.getSaldoInicial());
-                    existingAccount.setEstado(cuentaDTO.getEstado());
-                    existingAccount.setTipoCuenta(cuentaDTO.getTipoCuenta());
-                    return existingAccount;
-                });
-
-        return clienteService.findByIdentificacion(cuentaDTO.getClienteId())
-                .map(clienteDTO -> {
-                    Cuenta cuentaActualizada = cuentaRepository.save(fabricaCuentaComponent.criarCuenta(newCuentaDTO.get(), clienteDTO));
-                    return fabricaClienteComponentComun.criarCuentaDTO(cuentaActualizada);
-                });
+        return cuentaRepository.findByNumeroCuenta(cuentaDTO.getNumeroCuenta())
+                .flatMap(existingAccount -> clienteService.findByIdentificacion(existingAccount.getCliente().getIdentificacion())
+                        .map(clienteDTO -> {
+                            existingAccount.setSaldoInicial(cuentaDTO.getSaldoInicial());
+                            existingAccount.setEstado(cuentaDTO.getEstado());
+                            existingAccount.setTipoCuenta(cuentaDTO.getTipoCuenta());
+                            existingAccount.setCliente(clienteMapper.toEntity(clienteDTO));
+                            Cuenta cuentaActualizada = cuentaRepository.save(existingAccount);
+                            return cuentaMapper.toDTO(cuentaActualizada);
+                        })
+                );
     }
+
 }

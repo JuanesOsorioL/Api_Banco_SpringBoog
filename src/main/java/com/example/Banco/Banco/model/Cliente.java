@@ -1,11 +1,10 @@
 package com.example.Banco.Banco.model;
 
-import com.example.Banco.Banco.dto.ClienteDTO;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
@@ -16,20 +15,10 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Cliente extends Persona {
 
-    @Column(unique = true, nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clienteId;
 
     private String contrasena;
     private Boolean estado;
-
-    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cuenta> cuentas = new ArrayList<>();
-
-    public Cliente(ClienteDTO clienteDTO) {
-        super(clienteDTO);
-        this.clienteId = clienteDTO.getIdentificacion();
-        this.contrasena = clienteDTO.getContrasena();
-        this.estado = clienteDTO.getEstado();
-       // this.cuentas = clienteDTO.getCuentas();
-    }
 }

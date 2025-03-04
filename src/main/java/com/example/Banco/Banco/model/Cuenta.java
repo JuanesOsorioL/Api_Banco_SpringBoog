@@ -1,11 +1,11 @@
 package com.example.Banco.Banco.model;
 
-import com.example.Banco.Banco.dto.ClienteDTO;
-import com.example.Banco.Banco.dto.CuentaDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 
 @Data
@@ -15,33 +15,17 @@ import lombok.NoArgsConstructor;
 @Table(name = "cuentas")
 public class Cuenta {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(unique = true, nullable = false)
     private Long numeroCuenta;
 
     private String tipoCuenta;
-    private Double saldoInicial;
+    private BigDecimal saldoInicial;
     private Boolean estado;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
-
-    public Cuenta(CuentaDTO cuentaDTO, Cliente cliente) {
-        this.numeroCuenta = cuentaDTO.getNumeroCuenta();
-        this.tipoCuenta = cuentaDTO.getTipoCuenta();
-        this.saldoInicial = cuentaDTO.getSaldoInicial();
-        this.estado = cuentaDTO.getEstado();
-        this.cliente = cliente;
-    }
-
-    @Override
-    public String toString() {
-        return "Cuenta{" +
-                "numeroCuenta=" + numeroCuenta +
-                ", tipoCuenta='" + tipoCuenta + '\'' +
-                ", saldoInicial=" + saldoInicial +
-                ", estado=" + estado +
-                ", cliente=" + cliente.toString() +
-                '}';
-    }
 }

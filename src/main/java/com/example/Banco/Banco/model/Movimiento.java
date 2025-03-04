@@ -1,10 +1,11 @@
 package com.example.Banco.Banco.model;
 
-import com.example.Banco.Banco.dto.MovimientoDTO;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.math.BigDecimal;
 
 
 @Data
@@ -15,21 +16,14 @@ import java.util.Date;
 public class Movimiento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long movimientoId;
 
+    private String fecha;
     private String tipoMovimiento;
-    private Double valor;
-    private Double saldo;
-    private Date fecha;
-/*
+    private BigDecimal valor;
+    private BigDecimal saldo;
+
     @ManyToOne
-    @JoinColumn(name = "numero_cuenta")
+    @JoinColumn(name = "numero_cuenta", nullable = false)
     private Cuenta cuenta;
-*/
-    public Movimiento(MovimientoDTO movimientoDTO) {
-        this.tipoMovimiento = movimientoDTO.getTipoMovimiento();
-        this.valor = movimientoDTO.getValor();
-        this.saldo = movimientoDTO.getSaldo();
-        this.fecha = movimientoDTO.getFecha();
-    }
 }

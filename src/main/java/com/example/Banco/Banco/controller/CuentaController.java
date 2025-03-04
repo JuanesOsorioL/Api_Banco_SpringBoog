@@ -1,6 +1,5 @@
 package com.example.Banco.Banco.controller;
 
-import com.example.Banco.Banco.dto.ClienteDTO;
 import com.example.Banco.Banco.dto.CuentaDTO;
 import com.example.Banco.Banco.model.ApiResponse;
 import com.example.Banco.Banco.service.CuentaService;
@@ -9,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/banco/cuenta")
@@ -46,7 +44,7 @@ public class CuentaController {
         return cuentaService.findByNumeroCuenta(account)
                 .map(cuentaDTO -> ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Cuenta Encontrado", cuentaDTO)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Cuenta No Existe", null)));
+                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "cuenta No Existe", null)));
     }
 
     @DeleteMapping("/{account}")

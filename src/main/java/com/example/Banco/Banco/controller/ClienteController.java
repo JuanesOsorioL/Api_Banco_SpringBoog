@@ -42,7 +42,7 @@ public class ClienteController {
         return clienteService.findByIdentificacion(id)
                 .map(clientDTO -> ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Cliente encontrado", clientDTO)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Cliente No Existe", null)));
+                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "cliente No Existe", null)));
     }
 
     @DeleteMapping("/{id}")
@@ -55,7 +55,6 @@ public class ClienteController {
 
     @PutMapping
     public ResponseEntity<ApiResponse<ClienteDTO>> updateCliente(@RequestBody ClienteDTO clienteDTO) {
-        System.out.println("clienteDTO = " + clienteDTO);
         return clienteService.update(clienteDTO)
                 .map(existClientDTO -> ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Cliente Actualizado", existClientDTO)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)

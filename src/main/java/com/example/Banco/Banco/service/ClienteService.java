@@ -1,7 +1,6 @@
 package com.example.Banco.Banco.service;
 
-import com.example.Banco.Banco.Component.FabricaClienteComponent;
-import com.example.Banco.Banco.Component.FabricaClienteComponentComun;
+import com.example.Banco.Banco.Component.ClienteMapper;
 import com.example.Banco.Banco.dto.ClienteDTO;
 import com.example.Banco.Banco.model.Cliente;
 import com.example.Banco.Banco.repository.ClienteRepository;
@@ -13,16 +12,12 @@ import java.util.Optional;
 @Service
 public class ClienteService {
 
+    private final ClienteMapper clienteMapper;
     private final ClienteRepository clienteRepository;
 
-    private final FabricaClienteComponent fabricaClienteComponent;
-
-    private final FabricaClienteComponentComun fabricaClienteComponentComun;
-
-    public ClienteService(ClienteRepository clienteRepository, FabricaClienteComponent fabricaClienteComponent, FabricaClienteComponentComun fabricaClienteComponentComun) {
+    public ClienteService(ClienteMapper clienteMapper, ClienteRepository clienteRepository) {
+        this.clienteMapper = clienteMapper;
         this.clienteRepository = clienteRepository;
-        this.fabricaClienteComponent = fabricaClienteComponent;
-        this.fabricaClienteComponentComun = fabricaClienteComponentComun;
     }
 
     public Optional<ClienteDTO> save(ClienteDTO clienteDTO) {
@@ -30,32 +25,40 @@ public class ClienteService {
                 .isPresent()) {
             return Optional.empty();
         }
-        Cliente newClient = fabricaClienteComponentComun.criarCliente(clienteDTO);
+        Cliente newClient = clienteMapper.toEntity(clienteDTO);
         Cliente clientSaved = clienteRepository.save(newClient);
-        return Optional.of(fabricaClienteComponent.criarClienteDTO(clientSaved));
+        return Optional.of(clienteMapper.toDTO(clientSaved));
     }
 
     public List<ClienteDTO> findAll() {
-
-        return fabricaClienteComponent.listarClientes(clienteRepository.findAll());
+        return clienteMapper.toDTOList(clienteRepository.findAll());
     }
 
     public Optional<ClienteDTO> findByIdentificacion(Long identificacion) {
-        return clienteRepository.findClienteByIdentificacion(identificacion)
-                .map(fabricaClienteComponent::criarClienteDTO);
+        return clienteRepository.findByIdentificacion(identificacion)
+                .map(clienteMapper::toDTO);
     }
 
     public Optional<ClienteDTO> delete(Long identificacion) {
         return findByIdentificacion(identificacion).map(clienteDTO -> {
-            clienteRepository.deleteById(clienteDTO.getIdentificacion());
+            clienteRepository.deleteById(clienteDTO.getClienteId());
             return clienteDTO;
         });
     }
 
     public Optional<ClienteDTO> update(ClienteDTO clienteDTO) {
-        System.out.println("clienteDTO = " + clienteDTO);
         return findByIdentificacion(clienteDTO.getIdentificacion())
-                .map((clientExist) -> fabricaClienteComponent.criarClienteDTO(clienteRepository.save(fabricaClienteComponentComun.criarCliente(clienteDTO))));
+                .map(clienteExistente -> {
+                    Cliente clienteActualizado = clienteMapper.toEntity(clienteDTO);
+                    clienteActualizado.setClienteId(clienteExistente.getClienteId());
+                    Cliente clienteGuardado = clienteRepository.save(clienteActualizado);
+                    return clienteMapper.toDTO(clienteGuardado);
+                });
+    }
+
+    public Optional<ClienteDTO> findByClienteId(Long clienteId) {
+        return clienteRepository.findByClienteId(clienteId)
+                .map(clienteMapper::toDTO);
     }
 
 }

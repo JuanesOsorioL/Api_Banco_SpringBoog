@@ -1,32 +1,23 @@
 package com.example.Banco.Banco.dto;
 
-import com.example.Banco.Banco.model.Cliente;
-import lombok.*;
-
-import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class ClienteDTO extends PersonaDTO {
+public class ClienteDTO {
+    private String nombre;
+    private String genero;
+    private Integer edad;
+    private Long identificacion;
+    private String direccion;
+    private String telefono;
     private Long clienteId;
-    private String contrasena;
     private Boolean estado;
-    private List<CuentaDTO> cuentas;
 
-    public ClienteDTO(Cliente cliente) {
-        super(cliente);
-        this.clienteId = cliente.getIdentificacion();
-        this.contrasena = cliente.getContrasena();
-        this.estado = cliente.getEstado();
-
-       // this.cuentas =cliente.getCuentas();
-
-       /* this.cuentas = cliente.getCuentas().stream()
-                .map(CuentaDTO::new)
-                .collect(Collectors.toList());*/
-    }
 }
