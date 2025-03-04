@@ -5,6 +5,7 @@ import com.example.Banco.Banco.Component.CuentaMapper;
 import com.example.Banco.Banco.dto.CuentaDTO;
 import com.example.Banco.Banco.model.Cuenta;
 import com.example.Banco.Banco.repository.CuentaRepository;
+import com.example.Banco.Banco.repository.MovimientoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,12 +18,14 @@ public class CuentaService {
     private final CuentaMapper cuentaMapper;
     private final CuentaRepository cuentaRepository;
     public final ClienteService clienteService;
+    public final MovimientoRepository movimientoRepository;
 
-    public CuentaService(ClienteMapper clienteMapper, CuentaMapper cuentaMapper, CuentaRepository cuentaRepository, ClienteService clienteService) {
+    public CuentaService(ClienteMapper clienteMapper, CuentaMapper cuentaMapper, CuentaRepository cuentaRepository, ClienteService clienteService, MovimientoRepository movimientoRepository) {
         this.clienteMapper = clienteMapper;
         this.cuentaMapper = cuentaMapper;
         this.cuentaRepository = cuentaRepository;
         this.clienteService = clienteService;
+        this.movimientoRepository = movimientoRepository;
     }
 
     public Optional<CuentaDTO> save(CuentaDTO cuentaDTO) {
@@ -50,11 +53,13 @@ public class CuentaService {
 
     public Optional<CuentaDTO> delete(Long account) {
         return cuentaRepository.findByNumeroCuenta(account)
-                .map(cuenta -> {
-                            cuentaRepository.delete(cuenta);
-                            return cuentaMapper.toDTO(cuenta);
-                        }
-                );
+                .flatMap(cuenta -> {
+                    if (movimientoRepository.existsMovimientosByCuenta(cuenta)) {
+                        return Optional.empty();
+                    }
+                    cuentaRepository.delete(cuenta);
+                    return Optional.of(cuentaMapper.toDTO(cuenta));
+                });
     }
 
     public Optional<CuentaDTO> update(CuentaDTO cuentaDTO) {

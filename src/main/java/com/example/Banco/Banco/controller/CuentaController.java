@@ -52,7 +52,7 @@ public class CuentaController {
         return cuentaService.delete(account)
                 .map(cuentaDTO -> ResponseEntity.ok(new ApiResponse<>(HttpStatus.OK.value(), "Cuenta Eliminado", cuentaDTO)))
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Cuenta No Existe", null)));
+                        .body(new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Cuenta No Existe o Tiene movimientos aun creados", null)));
     }
 
     @PutMapping

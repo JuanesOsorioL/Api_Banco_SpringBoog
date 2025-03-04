@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +17,6 @@ public class CuentaDTO {
     private BigDecimal saldoInicial;
     private Boolean estado;
     private Long clienteId;
+
+
 }

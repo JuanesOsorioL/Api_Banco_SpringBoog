@@ -1,6 +1,8 @@
 package com.example.Banco.Banco.service;
 
 import com.example.Banco.Banco.Component.MovimientoMapper;
+import com.example.Banco.Banco.Exception.SaldoInsuficienteException;
+import com.example.Banco.Banco.Exception.TipoMovimientoInvalidoException;
 import com.example.Banco.Banco.dto.ClienteDTO;
 import com.example.Banco.Banco.dto.CuentaDTO;
 import com.example.Banco.Banco.dto.MovimientoDTO;
@@ -62,18 +64,6 @@ public class MovimientoService {
         return movimientoRepository.findByMovimientoId(id)
                 .map(movimientoMapper::toDTO);
     }
-/*
-    public Optional<MovimientoDTO> save(MovimientoDTO movimientoDTO) {
-        return cuentaService.findByNumeroCuenta(movimientoDTO.getNumeroCuenta())
-                .flatMap(cuentaDTO ->
-                        clienteService.findByClienteId(cuentaDTO.getClienteId())
-                                .map(clienteDTO -> {
-                                    Movimiento movimiento = movimientoMapper.toEntity(movimientoDTO);
-
-                                    return getMovimientoDTO(cuentaDTO, clienteDTO, movimiento);
-                                })
-                );
-    }*/
 
     public Optional<MovimientoDTO> save(MovimientoDTO movimientoDTO) {
         return cuentaService.findByNumeroCuenta(movimientoDTO.getNumeroCuenta())
@@ -81,23 +71,21 @@ public class MovimientoService {
                         .flatMap(clienteDTO -> {
                             Movimiento movimiento = movimientoMapper.toEntity(movimientoDTO);
                             BigDecimal nuevoSaldo;
-
                             if (movimientoDTO.getTipoMovimiento().equalsIgnoreCase("Retiro")) {
                                 nuevoSaldo = cuentaDTO.getSaldoInicial().subtract(movimientoDTO.getValor());
                                 if (nuevoSaldo.compareTo(BigDecimal.ZERO) < 0) {
-                                    throw new RuntimeException("Saldo no disponible");
+                                    throw new SaldoInsuficienteException("Saldo insuficiente para realizar el retiro");
                                 }
                             } else if (movimientoDTO.getTipoMovimiento().equalsIgnoreCase("Deposito")) {
                                 nuevoSaldo = cuentaDTO.getSaldoInicial().add(movimientoDTO.getValor());
                             } else {
-                                throw new RuntimeException("Tipo de movimiento inválido");
+                                throw new TipoMovimientoInvalidoException("El tipo de movimiento es inválido. Solo se permite 'Retiro' o 'Deposito'");
                             }
-
 
                             cuentaDTO.setSaldoInicial(nuevoSaldo);
                             movimiento.setSaldo(nuevoSaldo);
                             cuentaService.update(cuentaDTO);
-                            
+
                             return Optional.of(getMovimientoDTO(cuentaDTO, clienteDTO, movimiento));
                         })
                 );
@@ -109,10 +97,6 @@ public class MovimientoService {
                         .flatMap(cuentaDTO -> clienteService.findByClienteId(cuentaDTO.getClienteId())
                                 .map(clienteDTO -> {
                                     existingMovimiento.setFecha(movimientoDTO.getFecha());
-                                    existingMovimiento.setTipoMovimiento(movimientoDTO.getTipoMovimiento());
-                                    existingMovimiento.setValor(movimientoDTO.getValor());
-                                    existingMovimiento.setSaldo(movimientoDTO.getSaldo());
-
                                     return getMovimientoDTO(cuentaDTO, clienteDTO, existingMovimiento);
                                 })
                         )
